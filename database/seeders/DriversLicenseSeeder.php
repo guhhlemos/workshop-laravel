@@ -2,10 +2,11 @@
 
 namespace Database\Seeders;
 
-use App\Models\Car;
+use App\Models\DriversLicense;
+use App\Models\Ownership;
 use Illuminate\Database\Seeder;
 
-class CarSeeder extends Seeder
+class DriversLicenseSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,6 +15,6 @@ class CarSeeder extends Seeder
      */
     public function run()
     {
-        Car::factory()->count(30)->create();
+        DriversLicense::factory()->count(30)->create();
     }
 }

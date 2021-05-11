@@ -17,6 +17,7 @@ class CreateOwnershipsTable extends Migration
             $table->id();
             $table->string('firstname');
             $table->string('lastname');
+            $table->string('cpf');
             $table->timestamps();
         });
     }

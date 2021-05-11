@@ -2,7 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Ownership;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class OwnershipSeeder extends Seeder
 {
@@ -13,6 +15,6 @@ class OwnershipSeeder extends Seeder
      */
     public function run()
     {
-        //
+        Ownership::factory()->count(30)->create();
     }
 }
