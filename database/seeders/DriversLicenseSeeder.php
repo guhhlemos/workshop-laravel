@@ -15,6 +15,10 @@ class DriversLicenseSeeder extends Seeder
      */
     public function run()
     {
-        DriversLicense::factory()->count(30)->create();
+        for ($i = 1; $i <= 30; $i++) {
+            DriversLicense::factory()->create([
+                'ownership_id' => $i
+            ]);
+        }
     }
 }

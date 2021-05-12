@@ -23,11 +23,11 @@ class OwnershipFactory extends Factory
      */
     public function definition()
     {
-        $cpf = rand(0,9) . rand(0,9) . rand(0,9) . '.' . rand(0,9) . rand(0,9) . rand(0,9) . '.' . rand(0,9) . rand(0,9) . rand(0,9) . '-' . rand(0,9) . rand(0,9);
+        $cpf = rand(0, 9) . rand(0, 9) . rand(0, 9) . '.' . rand(0, 9) . rand(0, 9) . rand(0, 9) . '.' . rand(0, 9) . rand(0, 9) . rand(0, 9) . '-' . rand(0, 9) . rand(0, 9);
         // Log::debug($cpf);
-        
+
         return [
-            'firstname' => $this->faker->firstName(), 
+            'firstname' => $this->faker->firstName(),
             'lastname' => $this->faker->lastName(),
             'cpf' => $cpf
         ];

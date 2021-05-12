@@ -17,7 +17,7 @@ class CreateCarsTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('model');
-            $table->year('model_year');
+            $table->integer('model_year');
             $table->unsignedBigInteger('ownership_id')->nullable();
             $table->foreign('ownership_id')
                 ->references('id')

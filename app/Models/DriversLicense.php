@@ -10,7 +10,7 @@ class DriversLicense extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['cnh', 'issue_date', 'expiration_date'];
+    protected $fillable = ['cnh', 'issue_date'];
 
     public function setIssueDateAttribute($value)
     {
@@ -18,9 +18,14 @@ class DriversLicense extends Model
         $this->attributes['expiration_date'] = Carbon::parse($value)->addYears(10)->format('Y-m-d');
     }
 
+    public function getIssueDateAttribute()
+    {
+        return Carbon::parse($this->attributes['issue_date'])->format('d/m/Y');
+    }
+
     public function getExpirationDateAttribute()
     {
-        return Carbon::parse($this->attributes['expiration_date'])->format('Y-m-d');
+        return Carbon::parse($this->attributes['expiration_date'])->format('d/m/Y');
     }
 
     public function ownership()

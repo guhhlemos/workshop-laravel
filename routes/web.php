@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\CarController;
+use App\Http\Controllers\OwnershipController;
+use App\Http\Controllers\TicketController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +16,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::resources([
+    'ownerships' => OwnershipController::class,
+    'cars' => CarController::class,
+    'tickets' => TicketController::class
+]);

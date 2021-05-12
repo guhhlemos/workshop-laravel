@@ -14,7 +14,7 @@ class AddTrafficTicketToOwnershipsTable extends Migration
     public function up()
     {
         Schema::table('ownerships', function (Blueprint $table) {
-            $table->boolean('traffic_ticket')->after('lastname');
+            $table->boolean('traffic_ticket')->after('lastname')->default(false);
         });
     }
 

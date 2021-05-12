@@ -8,4 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Car extends Model
 {
     use HasFactory;
+
+    protected $fillable = ['name', 'model', 'model_year', 'ownership_id'];
+
+    public function ownership()
+    {
+        return $this->belongsTo(Ownership::class);
+    }
 }

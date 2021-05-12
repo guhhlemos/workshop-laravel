@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DriversLicense;
 use App\Models\Ownership;
 use Illuminate\Http\Request;
 
@@ -14,7 +15,9 @@ class OwnershipController extends Controller
      */
     public function index()
     {
-        //
+        $ownerships = Ownership::all();
+
+        return view('components.ownerships', compact('ownerships'));
     }
 
     /**
@@ -35,7 +38,14 @@ class OwnershipController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $ownership = Ownership::create($request->only(['firstname', 'lastname', 'cpf']));
+
+        $drivers_licence = new DriversLicense();
+        $drivers_licence->fill($request->only(['cnh', 'issue_date']));
+        $drivers_licence->ownership_id = $ownership->id;
+        $drivers_licence->save();
+
+        return back();
     }
 
     /**

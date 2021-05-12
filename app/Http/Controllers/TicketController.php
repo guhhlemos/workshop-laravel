@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Car;
-use App\Models\Ownership;
 use Illuminate\Http\Request;
 
-class CarController extends Controller
+class TicketController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,10 +13,7 @@ class CarController extends Controller
      */
     public function index()
     {
-        $cars = Car::all();
-        $ownerships = Ownership::all();
-
-        return view('components.cars', compact('cars', 'ownerships'));
+        return view('components.tickets');
     }
 
     /**
@@ -39,18 +34,16 @@ class CarController extends Controller
      */
     public function store(Request $request)
     {
-        Car::create($request->only(['name', 'model', 'model_year', 'ownership_id']));
-
-        return back();
+        //
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Car  $car
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Car $car)
+    public function show($id)
     {
         //
     }
@@ -58,10 +51,10 @@ class CarController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Car  $car
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Car $car)
+    public function edit($id)
     {
         //
     }
@@ -70,10 +63,10 @@ class CarController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Car  $car
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Car $car)
+    public function update(Request $request, $id)
     {
         //
     }
@@ -81,10 +74,10 @@ class CarController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Car  $car
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Car $car)
+    public function destroy($id)
     {
         //
     }
