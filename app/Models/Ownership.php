@@ -9,6 +9,14 @@ class Ownership extends Model
 {
     use HasFactory;
 
+    // protected $table = 'ownerships';
+
+    // protected $primaryKey = 'ownerships_id';
+
+    // public $timestamps = false;
+
+    // protected $connection = 'sqlite';
+
     protected $fillable = ['firstname', 'lastname', 'cpf'];
 
     public function getCpfAttribute()

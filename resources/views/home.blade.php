@@ -20,9 +20,6 @@
                     <li class="nav-item">
                         <a id="cars" class="nav-link" href="{{route('cars.index')}}">Carros</a>
                     </li>
-                    <li class="nav-item">
-                        <a id="tickets" class="nav-link" href="{{route('tickets.index')}}">Multas</a>
-                    </li>
                 </ul>
             </div>
             <div class="card-body">

@@ -16,6 +16,28 @@ class AddTrafficTicketToOwnershipsTable extends Migration
         Schema::table('ownerships', function (Blueprint $table) {
             $table->boolean('traffic_ticket')->after('lastname')->default(false);
         });
+
+        /**
+         * Atualizar atributos usando o método table
+         *      $table->string('name', 50)->nullable()->change();
+         * 
+         * Renomear coluna
+         *      $table->renameColumn('from', 'to');
+         * 
+         * Remover coluna
+         *      $table->dropColumn('votes');
+         *      $table->dropColumn(['votes', 'avatar', 'location']);
+         *             
+         */
+
+        /**
+         * atualizar tabela
+         *      Schema::rename($from, $to);
+         * 
+         *      Schema::drop('users');
+         *
+         *      Schema::dropIfExists('users');
+         */
     }
 
     /**
