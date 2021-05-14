@@ -90,6 +90,8 @@ class OwnershipController extends Controller
      */
     public function destroy(Ownership $ownership)
     {
-        //
+        $ownership->delete();
+
+        return back();
     }
 }

@@ -43,6 +43,7 @@
                 <th scope="col">Modelo</th>
                 <th scope="col">Ano</th>
                 <th scope="col">Proprietário</th>
+                <th scope="col">Ações</th>
             </tr>
         </thead>
         <tbody>
@@ -52,6 +53,14 @@
                 <td>{{ $car->model }}</td>
                 <td>{{ $car->model_year }}</td>
                 <td>{{ $car->ownership->fullname ?? "-" }}</td>
+                <td>
+                        <form method="POST" action="{{route('cars.destroy',[$car->id])}}">
+                            @csrf
+                            @method('DELETE')
+                            <input type="hidden" name="id" value="{{$car->id}}">
+                            <button class="btn btn-danger" type="submit">Deletar</button>
+                        </form>
+                    </td>
             </tr>
             @endforeach
         </tbody>

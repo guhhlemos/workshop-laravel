@@ -48,6 +48,7 @@
                     <th scope="col">CNH</th>
                     <th scope="col">Data de Emissão (CNH)</th>
                     <th scope="col">Data de Validade (CNH)</th>
+                    <th scope="col">Ações</th>
                     <th scope="col">
                         <form action="{{ url('notify_ownerships') }}" method="POST" target="dummyframe">
                             @csrf
@@ -65,6 +66,14 @@
                     <td>{{ $ownership->drivers_license->cnh ?? "-" }}</td>
                     <td>{{ $ownership->drivers_license->issue_date  ?? "-" }}</td>
                     <td>{{ $ownership->drivers_license->expiration_date  ?? "-" }}</td>
+                    <td>
+                        <form method="POST" action="{{route('ownerships.destroy',[$ownership->id])}}">
+                            @csrf
+                            @method('DELETE')
+                            <input type="hidden" name="id" value="{{$ownership->id}}">
+                            <button class="btn btn-danger" type="submit">Deletar</button>
+                        </form>
+                    </td>
                     <td>
                         @if ($ownership->traffic_ticket)
                         <form action="{{ url('notify_ownerships', ['id' => $ownership->id]) }}" method="POST" target="dummyframe">
