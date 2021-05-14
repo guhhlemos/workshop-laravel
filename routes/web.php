@@ -2,12 +2,13 @@
 
 use App\Http\Controllers\CarController;
 use App\Http\Controllers\OwnershipController;
-use App\Jobs\NotifyOwnershipByEmail;
+use App\Jobs\NotifyOwnershipJob;
 use App\Models\Car;
 use App\Models\DriversLicense;
 use App\Models\Ownership;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,11 +30,23 @@ Route::post('notify_ownerships/{id?}', function (Request $request, $id = null) {
 
     // Gus - Adicionar o envio por comando artisan tb. Dessa forma é possível ver o envio síncrono e assíncrono
 
+    // if ($id) {
+    //     $exitCode = Artisan::call('notifications:ownership-simplified', [
+    //         'ownerships' => [$id],
+    //     ]);
+    // } else {
+    //     $exitCode = Artisan::call('notifications:ownership-simplified', [
+    //         '--all' => true,
+    //     ]);
+    // }
+
+    // dd($exitCode);
+
     if ($id) {
-        NotifyOwnershipByEmail::dispatch(Ownership::find($id));
+        NotifyOwnershipJob::dispatch(Ownership::find($id));
     } else {
         foreach (Ownership::all() as $ownership) {
-            NotifyOwnershipByEmail::dispatch($ownership);
+            NotifyOwnershipJob::dispatch($ownership);
         }
     }
 });
@@ -41,7 +54,7 @@ Route::post('notify_ownerships/{id?}', function (Request $request, $id = null) {
 /**
  * rota só pra apresentação
  */
-Route::get('teste', function() {
+Route::get('teste', function () {
 
     $ownership = new Ownership();
     $ownership->firstname = "Nome";
@@ -50,7 +63,7 @@ Route::get('teste', function() {
     $ownership->save(); // vai dar erro pq cpf não tem default
 
     dump($ownership);
-    
+
     /**
      * Atualizar fillable
      */
@@ -68,7 +81,7 @@ Route::get('teste', function() {
 
     dump($ownerships);
 
-    foreach($ownerships as $ownership) {
+    foreach ($ownerships as $ownership) {
         print($ownership->lastname . " ");
     }
 
@@ -76,7 +89,7 @@ Route::get('teste', function() {
     $ownerships_with_ticket = Ownership::select('firstname', 'lastname')->where('traffic_ticket', '1')->orderBy('firstname', 'ASC');
     dump($ownerships_with_ticket->toSql());
     dump($ownerships_with_ticket->get());
-    
+
     $ownerships_with_no_ticket = Ownership::where('traffic_ticket', '0')->orderBy('firstname', 'ASC')->take(10); // ->limit(10)
     dump($ownerships_with_no_ticket->toSql());
     dump($ownerships_with_no_ticket->get());
@@ -84,14 +97,14 @@ Route::get('teste', function() {
     /*********/
     $car = Car::find(1);
     dump($car);
-    
+
     $car = Car::where('model_year', '>', 2000)->get();
     dump($car);
-    
+
     $car = Car::where('manufacturer', 'Tesla')->first();
     // $car = Car::firstWhere('manufacturer', 'Tesla');
     dump($car);
 
-    $traffic_tickets = Ownership::where('traffic_ticket','1')->count();
+    $traffic_tickets = Ownership::where('traffic_ticket', '1')->count();
     dump($traffic_tickets);
 });
