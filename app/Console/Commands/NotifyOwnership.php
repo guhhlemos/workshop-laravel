@@ -2,30 +2,30 @@
 
 namespace App\Console\Commands;
 
-use App\Jobs\NotifyOwnershipByEmail as JobsNotifyOwnershipByEmail;
+use App\Jobs\NotifyOwnership as JobsNotifyOwnership;
 use App\Models\Ownership;
 use App\Services\NotifyOwnershipService;
 use App\Support\DripEmailer;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
-class NotifyOwnershipByEmail extends Command
+class NotifyOwnership extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    // protected $signature = 'notify:send-email {ownership=gustavo}';
-    // protected $signature = 'notify:send-email {ownership=gustavo} {--all}';
-    protected $signature = 'notify:send-email {ownerships?* : Ownership cpf} {--all : Notify all ownerships}';
+    // protected $signature = 'notifications:ownership {ownership=gustavo}';
+    // protected $signature = 'notifications:ownership {ownership=gustavo} {--all}';
+    protected $signature = 'notifications:ownership {ownerships?* : Ownership cpf} {--all : Notify all ownerships}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Send a email to a ownership about traffic ticket';
+    protected $description = 'Send a notification to a ownership about traffic ticket';
 
     /**
      * Create a new command instance.
@@ -115,7 +115,7 @@ class NotifyOwnershipByEmail extends Command
         // ##########################################
 
         // foreach ($ownerships as $ownership) {
-        //     JobsNotifyOwnershipByEmail::dispatch($ownership);
+        //     JobsNotifyOwnership::dispatch($ownership);
         //     // sleep(1);
         //     $bar->advance();
         // }

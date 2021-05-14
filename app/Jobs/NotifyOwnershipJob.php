@@ -3,7 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\Ownership;
-use App\Services\NotifyOwnershipByEmail as ServicesNotifyOwnershipByEmail;
+use App\Services\NotifyOwnership as ServicesNotifyOwnership;
 use App\Services\NotifyOwnershipService;
 use Carbon\CarbonInterval;
 use Exception;
@@ -15,7 +15,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 
-class NotifyOwnershipByEmail implements ShouldQueue
+class NotifyOwnershipJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
