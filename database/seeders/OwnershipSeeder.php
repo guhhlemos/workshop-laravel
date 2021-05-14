@@ -15,6 +15,19 @@ class OwnershipSeeder extends Seeder
      */
     public function run()
     {
-        Ownership::factory()->count(30)->create();
+        DB::table('ownerships')->insert([
+            [
+                'firstname' => 'Douglas',
+                'lastname' => 'Silva',
+                'cpf' => '11122233344'
+            ],
+            [
+                'firstname' => 'Gustavo',
+                'lastname' => 'Lemos',
+                'cpf' => '55566677788'
+            ],
+        ]);
+
+        Ownership::factory()->count(28)->create();
     }
 }
