@@ -48,7 +48,7 @@
         <tbody>
             @foreach ($cars as $car)
             <tr>
-                <td>{{ $car->name }}</td>
+                <td>{{ $car->manufacturer  }}</td>
                 <td>{{ $car->model }}</td>
                 <td>{{ $car->model_year }}</td>
                 <td>{{ $car->ownership->fullname ?? "-" }}</td>

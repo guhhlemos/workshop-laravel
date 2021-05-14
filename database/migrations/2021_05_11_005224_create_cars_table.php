@@ -15,9 +15,10 @@ class CreateCarsTable extends Migration
     {
         Schema::create('cars', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('manufacturer');
             $table->string('model');
             $table->integer('model_year');
+
             $table->unsignedBigInteger('ownership_id')->nullable();
             $table->foreign('ownership_id')
                 ->references('id')
@@ -25,6 +26,7 @@ class CreateCarsTable extends Migration
                 ->onUpdate('cascade')
                 ->onDelete('set null');
             $table->timestamps();
+            // $table->foreignId('ownership_id')->constrained();
         });
     }
 

@@ -25,7 +25,7 @@ class CarFactory extends Factory
         $owners = Ownership::all();
         
         return [
-            'name' => $this->faker->lastName(),
+            'manufacturer' => $this->faker->lastName(),
             'model' => $this->faker->lastName(),
             'model_year' => $this->faker->year,
             'ownership_id' => $this->faker->unique(true)->numberBetween(1, $owners->count()),
