@@ -35,6 +35,9 @@
     @endsection
 
     @section('table-content')
+
+    <iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe>
+
     <div class="m-4">
         <table class="table">
             <thead>
@@ -45,6 +48,12 @@
                     <th scope="col">CNH</th>
                     <th scope="col">Data de Emissão (CNH)</th>
                     <th scope="col">Data de Validade (CNH)</th>
+                    <th scope="col">
+                        <form action="{{ url('notify_ownerships') }}" method="POST" target="dummyframe">
+                            @csrf
+                            <button type="submit" class="btn btn-primary">Enviar Multas</button>
+                        </form>
+                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -56,6 +65,14 @@
                     <td>{{ $ownership->drivers_license->cnh ?? "-" }}</td>
                     <td>{{ $ownership->drivers_license->issue_date  ?? "-" }}</td>
                     <td>{{ $ownership->drivers_license->expiration_date  ?? "-" }}</td>
+                    <td>
+                        @if ($ownership->traffic_ticket)
+                        <form action="{{ url('notify_ownerships', ['id' => $ownership->id]) }}" method="POST" target="dummyframe">
+                            @csrf
+                            <button type="submit" class="btn btn-primary">Enviar Multa</button>
+                        </form>
+                        @endif
+                    </td>
                 </tr>
                 @endforeach
             </tbody>
