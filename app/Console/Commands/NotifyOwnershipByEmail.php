@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Jobs\NotifyOwnershipByEmail as JobsNotifyOwnershipByEmail;
 use App\Models\Ownership;
+use App\Services\NotifyOwnershipService;
 use App\Support\DripEmailer;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
@@ -89,23 +90,17 @@ class NotifyOwnershipByEmail extends Command
 
         $bar->start();
 
-        // foreach ($ownerships as $ownership) {
-
-        //     Log::info("enviando notificação via artisan para [{$ownership->cpf}] {$ownership->firstname} {$ownership->lastname}");
-
-        //     // sleep(1);
-        //     $bar->advance();
-        // }
-
-        // $bar->finish();
-
-        // $this->newLine(2);
-        // $this->info('Notificações enviadas!');
-        // $this->newLine();
-
         foreach ($ownerships as $ownership) {
 
-            JobsNotifyOwnershipByEmail::dispatch($ownership);
+            Log::debug("💬 Enviando notificação via artisan para {$ownership->firstname} {$ownership->lastname}");
+
+            $status = (new NotifyOwnershipService($ownership))->exec();
+
+            if ($status) {
+                Log::debug("✔️ Notificação enviada com sucesso para {$ownership->firstname} {$ownership->lastname}");
+            } else {
+                Log::debug("❌ Erro ao enviar notificação para {$ownership->firstname} {$ownership->lastname}");
+            }
 
             // sleep(1);
             $bar->advance();
@@ -114,7 +109,21 @@ class NotifyOwnershipByEmail extends Command
         $bar->finish();
 
         $this->newLine(2);
-        $this->info('As notificações foram despachadas para fila. Em alguns minutos todos serão notificados');
+        $this->info('Notificações enviadas!');
         $this->newLine();
+
+        // ##########################################
+
+        // foreach ($ownerships as $ownership) {
+        //     JobsNotifyOwnershipByEmail::dispatch($ownership);
+        //     // sleep(1);
+        //     $bar->advance();
+        // }
+
+        // $bar->finish();
+
+        // $this->newLine(2);
+        // $this->info('As notificações foram despachadas para fila. Em alguns minutos todos serão notificados');
+        // $this->newLine();
     }
 }

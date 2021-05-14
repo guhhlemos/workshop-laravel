@@ -4,6 +4,8 @@ namespace App\Jobs;
 
 use App\Models\Ownership;
 use App\Services\NotifyOwnershipByEmail as ServicesNotifyOwnershipByEmail;
+use App\Services\NotifyOwnershipService;
+use Carbon\CarbonInterval;
 use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
@@ -34,18 +36,25 @@ class NotifyOwnershipByEmail implements ShouldQueue
         $this->ownership = $ownership;
     }
 
-    // /**
-    //  * The number of times the job may be attempted.
-    //  *
-    //  * @var int
-    //  */
-    // public $tries = 2;
+    /**
+     * The number of times the job may be attempted.
+     *
+     * @var int
+     */
+    public $tries = 5;
 
-    // /**
-    //  * Determine the time at which the listener should timeout.
-    //  *
-    //  * @return \DateTime
-    //  */
+    /**
+     * The number of seconds the job can run before timing out.
+     *
+     * @var int
+     */
+    // public $timeout = 120;
+
+    /**
+     * Determine the time at which the listener should timeout.
+     *
+     * @return \DateTime
+     */
     // public function retryUntil()
     // {
     //     return now()->addSeconds(10);
@@ -58,19 +67,39 @@ class NotifyOwnershipByEmail implements ShouldQueue
      */
     public function handle()
     {
-        $are_you_lucky = (bool) random_int(0, 1);
+        $release_time = CarbonInterval::seconds(5);
 
-        sleep(1);
+        Log::debug("💬 attempt: {$this->attempts()} | Enviando notificação para {$this->ownership->firstname} {$this->ownership->lastname}");
 
-        if ($are_you_lucky === false) {
+        $status = (new NotifyOwnershipService($this->ownership))->exec();
 
-            $this->fail(new Exception('alguma treta aconteceu'));
+        if ($status) {
 
-            Log::error("attempt: {$this->attempts()} | Problema ao enviar notificação para [{$this->ownership->cpf}] {$this->ownership->firstname} {$this->ownership->lastname}");
+            Log::debug("✔️ attempt: {$this->attempts()} | Notificação enviada com sucesso para {$this->ownership->firstname} {$this->ownership->lastname}");
 
+            // job success
             return;
         }
 
-        Log::info("attempt: {$this->attempts()} | Enviando notificação através da fila para [{$this->ownership->cpf}] {$this->ownership->firstname} {$this->ownership->lastname}");
+        Log::debug("❌ attempt: {$this->attempts()} | Erro ao enviar notificação para {$this->ownership->firstname} {$this->ownership->lastname} | Tentando novamente em {$release_time}");
+
+        if ($this->attempts() < $this->tries) {
+            $this->release($release_time);
+        } else {
+            $this->fail(new Exception("Alguma treta aconteceu para o cliente {$this->ownership->firstname} {$this->ownership->lastname}"));
+        }
+    }
+
+    /**
+     * Handle a job failure.
+     *
+     * @param  \Throwable  $exception
+     * @return void
+     */
+    public function failed(\Throwable $exception)
+    {
+        // Send user notification of failure, etc...
+
+        Log::debug($exception->getMessage());
     }
 }

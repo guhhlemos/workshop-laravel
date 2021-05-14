@@ -6,6 +6,7 @@ use App\Http\Controllers\TicketController;
 use App\Jobs\NotifyOwnershipByEmail;
 use App\Models\Ownership;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,11 +25,15 @@ Route::resources([
     'tickets' => TicketController::class
 ]);
 
-Route::get('dispatch_job', function () {
+Route::post('notify_ownerships/{id?}', function (Request $request, $id = null) {
 
-    $ownerships = Ownership::all();
+    // Gus - Adicionar o envio por comando artisan tb. Dessa forma é possível ver o envio síncrono e assíncrono
 
-    foreach ($ownerships as $ownership) {
-        NotifyOwnershipByEmail::dispatch($ownership);
+    if ($id) {
+        NotifyOwnershipByEmail::dispatch(Ownership::find($id));
+    } else {
+        foreach (Ownership::all() as $ownership) {
+            NotifyOwnershipByEmail::dispatch($ownership);
+        }
     }
 });
