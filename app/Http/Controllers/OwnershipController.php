@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\DriversLicense;
 use App\Models\Ownership;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class OwnershipController extends Controller
 {
@@ -40,10 +41,10 @@ class OwnershipController extends Controller
     {
         $ownership = Ownership::create($request->only(['firstname', 'lastname', 'cpf']));
 
-        $drivers_licence = new DriversLicense();
-        $drivers_licence->fill($request->only(['cnh', 'issue_date']));
-        $drivers_licence->ownership_id = $ownership->id;
-        $drivers_licence->save();
+        $drivers_license = new DriversLicense();
+        $drivers_license->fill($request->only(['cnh', 'issue_date']));
+        $drivers_license->ownership_id = $ownership->id;
+        $drivers_license->save();
 
         return back();
     }
@@ -79,7 +80,13 @@ class OwnershipController extends Controller
      */
     public function update(Request $request, Ownership $ownership)
     {
-        //
+        $ownership->fill($request->only(['firstname', 'lastname', 'cpf']));
+        $ownership->save();
+
+        $ownership->drivers_license->fill($request->only(['cnh', 'issue_date']));
+        $ownership->drivers_license->save();
+
+        return back();
     }
 
     /**

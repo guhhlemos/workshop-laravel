@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Car;
 use App\Models\Ownership;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class CarController extends Controller
 {
@@ -39,7 +40,7 @@ class CarController extends Controller
      */
     public function store(Request $request)
     {
-        Car::create($request->only(['name', 'model', 'model_year', 'ownership_id']));
+        Car::create($request->only(['manufacturer', 'model', 'model_year', 'ownership_id']));
 
         return back();
     }
@@ -75,7 +76,13 @@ class CarController extends Controller
      */
     public function update(Request $request, Car $car)
     {
-        //
+        // Log::debug($request->all());
+        
+        $car->fill($request->only(['manufacturer', 'model', 'model_year', 'ownership_id']));
+        $car->save();
+        
+
+        return back();
     }
 
     /**
