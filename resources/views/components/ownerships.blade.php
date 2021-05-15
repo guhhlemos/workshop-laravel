@@ -3,8 +3,9 @@
 
     @section("form-content")
     <div>
-        <form method="POST" action="{{route('ownerships.store')}}">
+        <form id="create-form" method="POST" action="{{route('ownerships.store')}}">
             @csrf
+            <input type="hidden" name="id">
             <div class="form-row">
                 <div class="form-group col-md-6">
                     <label for="input-firstname">Primeiro nome</label>
@@ -42,14 +43,14 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th scope="col">Nome</th>
-                    <th scope="col">Sobrenome</th>
-                    <th scope="col">CPF</th>
-                    <th scope="col">CNH</th>
-                    <th scope="col">Data de Emissão (CNH)</th>
-                    <th scope="col">Data de Validade (CNH)</th>
-                    <th scope="col">Ações</th>
-                    <th scope="col">
+                    <th class="text-center align-middle" scope="col">Nome</th>
+                    <th class="text-center align-middle" scope="col">Sobrenome</th>
+                    <th class="text-center align-middle" scope="col">CPF</th>
+                    <th class="text-center align-middle" scope="col">CNH</th>
+                    <th class="text-center align-middle" scope="col">Data de Emissão (CNH)</th>
+                    <th class="text-center align-middle" scope="col">Data de Validade (CNH)</th>
+                    <th class="text-center align-middle" scope="col">Ações</th>
+                    <th class="text-center align-middle" scope="col">
                         <form action="{{ url('notify_ownerships') }}" method="POST" target="dummyframe">
                             @csrf
                             <button type="submit" class="btn btn-primary">Enviar Multas</button>
@@ -60,21 +61,31 @@
             <tbody>
                 @foreach ($ownerships as $ownership)
                 <tr>
-                    <td>{{ $ownership->firstname }}</td>
-                    <td>{{ $ownership->lastname }}</td>
-                    <td>{{ $ownership->cpf }}</td>
-                    <td>{{ $ownership->drivers_license->cnh ?? "-" }}</td>
-                    <td>{{ $ownership->drivers_license->issue_date  ?? "-" }}</td>
-                    <td>{{ $ownership->drivers_license->expiration_date  ?? "-" }}</td>
-                    <td>
+                    <td class="text-center align-middle">{{ $ownership->firstname }}</td>
+                    <td class="text-center align-middle">{{ $ownership->lastname }}</td>
+                    <td class="text-center align-middle">{{ $ownership->cpf }}</td>
+                    <td class="text-center align-middle">{{ $ownership->drivers_license->cnh ?? "-" }}</td>
+                    <td class="text-center align-middle">{{ $ownership->drivers_license->issue_date  ?? "-" }}</td>
+                    <td class="text-center align-middle">{{ $ownership->drivers_license->expiration_date  ?? "-" }}</td>
+                    <td class="text-center align-middle">
+                        <form class="update-form">
+                            <input type="hidden" name="id" value="{{$ownership->id}}">
+                            <input type="hidden" name="firstname" value="{{$ownership->firstname}}">
+                            <input type="hidden" name="lastname" value="{{$ownership->lastname}}">
+                            <input type="hidden" name="cpf" value="{{$ownership->cpf}}">
+                            <input type="hidden" name="cnh" value="{{$ownership->drivers_license->cnh ?? "-" }}">
+                            <input type="hidden" name="issue_date" value="{{$ownership->drivers_license->issue_date ?? "-" }}">
+                            <input type="hidden" name="expiration_date" value="{{$ownership->drivers_license->expiration_date ?? "-" }}">
+                            <button class="btn btn-warning btn-update" type="submit">Alterar</button>
+                        </form>
                         <form method="POST" action="{{route('ownerships.destroy',[$ownership->id])}}">
                             @csrf
                             @method('DELETE')
                             <input type="hidden" name="id" value="{{$ownership->id}}">
-                            <button class="btn btn-danger" type="submit">Deletar</button>
+                            <button class="btn btn-danger btn-delete" type="submit">Deletar</button>
                         </form>
                     </td>
-                    <td>
+                    <td class="text-center align-middle">
                         @if ($ownership->traffic_ticket)
                         <form action="{{ url('notify_ownerships', ['id' => $ownership->id]) }}" method="POST" target="dummyframe">
                             @csrf
@@ -87,6 +98,36 @@
             </tbody>
         </table>
     </div>
-    @endsection
 
+    <script>
+        $(function() {
+            $('.update-form').on('submit', function(e) {
+                e.preventDefault();
+
+                var id = $(this).find('input[name=id]').val()
+                var firstname = $(this).find('input[name=firstname]').val()
+                var lastname = $(this).find('input[name=lastname]').val()
+                var cpf = $(this).find('input[name=cpf]').val()
+                var cnh = $(this).find('input[name=cnh]').val()
+                var issue_date = $(this).find('input[name=issue_date]').val()
+                var expiration_date = $(this).find('input[name=expiration_date]').val()
+
+                $("#create-form input[name=id]").val(id)
+                $("#create-form input[name=firstname]").val(firstname)
+                $("#create-form input[name=lastname]").val(lastname)
+                $("#create-form input[name=cpf]").val(cpf)
+                $("#create-form input[name=cnh]").val(cnh)
+                $("#create-form input[name=issue_date]").val(issue_date.substring(6, 10) + '-' + issue_date.substring(3, 5) + '-' + issue_date.substring(0, 2))
+
+                $('#create-form').attr('action', `{{route("ownerships.index")}}/${id}`)
+                
+                if(!$('#create-form input[name=_method]').length){
+                    $('#create-form').append('@method("PUT")')
+                }
+            })
+        });
+
+    </script>
+
+    @endsection
 </div>
