@@ -18,7 +18,7 @@ class NotifyOwnership extends Command
      */
     // protected $signature = 'notifications:ownership {ownership=gustavo}';
     // protected $signature = 'notifications:ownership {ownership=gustavo} {--all}';
-    protected $signature = 'notifications:ownership {ownerships?* : Ownership cpf} {--all : Notify all ownerships}';
+    protected $signature = 'notifications:ownership {ownerships?* : Ownership cpf} {--all : Notify all ownerships} {--with-ticket : Notify all ownerships with ticket}';
 
     /**
      * The console command description.
@@ -51,6 +51,8 @@ class NotifyOwnership extends Command
 
         if ($this->option('all')) {
             $ownerships = Ownership::all();
+        } else if ($this->option('with-ticket')) {
+            $ownerships = Ownership::where('traffic_ticket', '1')->get();
         } else {
 
             if (empty($this->argument('ownerships'))) {
@@ -81,7 +83,7 @@ class NotifyOwnership extends Command
             $ownerships->map->only(['firstname', 'lastname', 'cpf'])
         );
 
-        if ($this->confirm('Deseja confirmar o envio da notificação para os proprietários?') === false) {
+        if ($this->confirm('Deseja confirmar o envio da notificação para os proprietários?', true) === false) {
             $this->info('envio não confirmado');
             return;
         }

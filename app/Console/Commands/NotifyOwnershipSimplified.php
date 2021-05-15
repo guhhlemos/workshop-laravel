@@ -18,7 +18,7 @@ class NotifyOwnershipSimplified extends Command
      */
     // protected $signature = 'notifications:ownership {ownership=gustavo}';
     // protected $signature = 'notifications:ownership {ownership=gustavo} {--all}';
-    protected $signature = 'notifications:ownership-simplified {ownerships?* : Ownership id} {--all : Notify all ownerships}';
+    protected $signature = 'notifications:ownership-simplified {ownerships?* : Ownership id} {--all : Notify all ownerships} {--with-ticket : Notify all ownerships with ticket}';
 
     /**
      * The console command description.
@@ -47,6 +47,8 @@ class NotifyOwnershipSimplified extends Command
     {
         if ($this->option('all')) {
             $ownerships = Ownership::all();
+        } else if ($this->option('with-ticket')) {
+            $ownerships = Ownership::where('traffic_ticket', '1')->get();
         } else {
             if (empty($this->argument('ownerships'))) {
                 return;
